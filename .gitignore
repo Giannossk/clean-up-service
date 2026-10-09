@@ -1,0 +1,30 @@
+# CMake build outputs
+build/
+bin/
+out/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Visual Studio & MSBuild
+.vs/
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+*.suo
+*.user
+*.pdb
+*.obj
+*.exe
+*.log
+
+# Reference repositories
+winutil-main/
+
+# C++ IDEs & tools
+.vscode/
+.idea/
+*.swp
+*.patch
