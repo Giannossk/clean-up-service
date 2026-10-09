@@ -37,11 +37,15 @@ set(SOURCES
     src/main.cpp
     src/service.cpp
     src/cleanup.cpp
+    src/config.cpp
+    src/organize.cpp
 )
 
 set(HEADERS
     include/service.hpp
     include/cleanup.hpp
+    include/config.hpp
+    include/organize.hpp
 )
 
 add_executable(CleanUpService
@@ -70,4 +74,11 @@ target_link_libraries(CleanUpService PRIVATE
 set_target_properties(CleanUpService PROPERTIES
     WIN32_EXECUTABLE FALSE
     OUTPUT_NAME "CleanUpService"
+)
+
+# Automatically copy config.ini next to the compiled executable
+add_custom_command(TARGET CleanUpService POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_SOURCE_DIR}/config.ini"
+        "$<TARGET_FILE_DIR:CleanUpService>/config.ini"
 )

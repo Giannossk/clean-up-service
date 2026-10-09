@@ -1,4 +1,6 @@
 #include "cleanup.hpp"
+#include "organize.hpp"
+#include "config.hpp"
 
 #include <windows.h>
 #include <shellapi.h>
@@ -215,12 +217,32 @@ void DiskCleanup() {
     LogMessage(L"=== DiskCleanup completed ===");
 }
 
-void RunAllCleanups() {
+void RunAllCleanups(const AppConfig* configPtr) {
+    AppConfig localConfig;
+    const AppConfig& config = configPtr ? *configPtr : (localConfig = LoadConfig());
+
     LogMessage(L"**************************************************");
     LogMessage(L"* CleanUpService: Starting Boot Maintenance Sequence *");
     LogMessage(L"**************************************************");
-    DeleteTempFiles();
-    DiskCleanup();
+
+    if (config.deleteTempFiles) {
+        DeleteTempFiles();
+    } else {
+        LogMessage(L"DeleteTempFiles disabled in config.ini. Skipping.");
+    }
+
+    if (config.diskCleanup) {
+        DiskCleanup();
+    } else {
+        LogMessage(L"DiskCleanup disabled in config.ini. Skipping.");
+    }
+
+    if (config.organizeDownloads) {
+        Organizer::OrganizeDownloads(config.downloadsPath, &config);
+    } else {
+        LogMessage(L"OrganizeDownloads disabled in config.ini. Skipping.");
+    }
+
     LogMessage(L"**************************************************");
     LogMessage(L"* CleanUpService: Maintenance Sequence Complete  *");
     LogMessage(L"**************************************************");
